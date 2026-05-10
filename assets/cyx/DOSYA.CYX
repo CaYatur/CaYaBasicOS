@@ -1,0 +1,68 @@
+# DOSYA.CYX  --  Dosya islemleri paneli
+# CYX runtime ornegi: INPUT, COPY/MOVE/DELETE, LIST_DISKS
+
+ON START
+  WINDOW 480 320 "Dosya Islemleri"
+  FILL 1
+
+  LABEL t1 8  6  LCYAN "DOSYA OPERASYONLARI"
+  LABEL t2 8  34 LGRAY "Kaynak disk no:"
+  INPUT srcvol 130 30 36 20
+  LABEL t3 180 34 LGRAY "Hedef disk no:"
+  INPUT dstvol 300 30 36 20
+
+  LABEL t4 8  64 LGRAY "Kaynak yol  (orn:  \EFI\BOOT\BOOTX64.EFI)"
+  INPUT srcpath 8 84 460 20
+
+  LABEL t5 8  114 LGRAY "Hedef yol"
+  INPUT dstpath 8 134 460 20
+
+  BUTTON btncopy 8   170 100 32 "KOPYALA"
+  BUTTON btnmove 116 170 100 32 "TASI"
+  BUTTON btndel  224 170 100 32 "SIL"
+  BUTTON btnlist 332 170 130 32 "DISK SAYISINI AL"
+
+  LABEL res     8 218 LCYAN "Hazir."
+  LABEL diskcnt 8 240 LGRAY "Disk sayisi: ?"
+
+  SET_INPUT srcvol "0"
+  SET_INPUT dstvol "0"
+END
+
+ON CLICK btncopy
+  GET_INPUT srcvol  $sv
+  GET_INPUT dstvol  $dv
+  GET_INPUT srcpath $sp
+  GET_INPUT dstpath $dp
+  TOINT $isv $sv
+  TOINT $idv $dv
+  COPY $isv $sp $idv $dp
+  SET_LABEL res "Kopyalandi."
+END
+
+ON CLICK btnmove
+  GET_INPUT srcvol  $sv
+  GET_INPUT dstvol  $dv
+  GET_INPUT srcpath $sp
+  GET_INPUT dstpath $dp
+  TOINT $isv $sv
+  TOINT $idv $dv
+  MOVE $isv $sp $idv $dp
+  SET_LABEL res "Tasindi."
+END
+
+ON CLICK btndel
+  GET_INPUT srcvol  $sv
+  GET_INPUT srcpath $sp
+  TOINT $isv $sv
+  DELETE $isv $sp
+  SET_LABEL res "Silindi."
+END
+
+ON CLICK btnlist
+  LIST_DISKS $cnt
+  SETSTR $msg "Disk sayisi: "
+  APPEND $msg $cnt
+  APPEND $msg "  (gecerli indeksler 0..N-1)"
+  SET_LABEL diskcnt $msg
+END

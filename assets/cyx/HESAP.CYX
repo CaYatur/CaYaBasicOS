@@ -1,0 +1,407 @@
+# HESAP.CYX  --  Basit hesap makinesi
+# Hem fare hem klavye ile calisir.
+# Klavye: 0..9 rakamlar, + - * / islemler, =/Enter sonuc, c/C sifirla.
+
+ON START
+  WINDOW 220 290 "Hesap"
+  FILL 1
+  FILLRECT 8 8 204 32 0
+  RECT 8 8 204 32 11
+  LABEL display 16 18 LCYAN "0"
+  SET $acc 0
+  SET $cur 0
+  SET $op 0
+
+  BUTTON b7 8   50 44 32 "7"
+  BUTTON b8 60  50 44 32 "8"
+  BUTTON b9 112 50 44 32 "9"
+  BUTTON bd 164 50 44 32 "/"
+  BUTTON b4 8   88 44 32 "4"
+  BUTTON b5 60  88 44 32 "5"
+  BUTTON b6 112 88 44 32 "6"
+  BUTTON bm 164 88 44 32 "*"
+  BUTTON b1 8   126 44 32 "1"
+  BUTTON b2 60  126 44 32 "2"
+  BUTTON b3 112 126 44 32 "3"
+  BUTTON bs 164 126 44 32 "-"
+  BUTTON b0 8   164 44 32 "0"
+  BUTTON bC 60  164 44 32 "C"
+  BUTTON beq 112 164 44 32 "="
+  BUTTON ba 164 164 44 32 "+"
+
+  LABEL hint  8 210 LGRAY  "Klavye: 0-9, + - * /, Enter veya =, C sifirla"
+  LABEL hint2 8 224 DGRAY  "Fare ile butonlara da tiklayabilirsin."
+END
+
+# ===== Digit handlers (button + key) =====
+ON CLICK b0
+  MUL $cur 10
+  SET_LABEL display $cur
+END
+ON KEY 0
+  MUL $cur 10
+  SET_LABEL display $cur
+END
+ON CLICK b1
+  MUL $cur 10
+  ADD $cur 1
+  SET_LABEL display $cur
+END
+ON KEY 1
+  MUL $cur 10
+  ADD $cur 1
+  SET_LABEL display $cur
+END
+ON CLICK b2
+  MUL $cur 10
+  ADD $cur 2
+  SET_LABEL display $cur
+END
+ON KEY 2
+  MUL $cur 10
+  ADD $cur 2
+  SET_LABEL display $cur
+END
+ON CLICK b3
+  MUL $cur 10
+  ADD $cur 3
+  SET_LABEL display $cur
+END
+ON KEY 3
+  MUL $cur 10
+  ADD $cur 3
+  SET_LABEL display $cur
+END
+ON CLICK b4
+  MUL $cur 10
+  ADD $cur 4
+  SET_LABEL display $cur
+END
+ON KEY 4
+  MUL $cur 10
+  ADD $cur 4
+  SET_LABEL display $cur
+END
+ON CLICK b5
+  MUL $cur 10
+  ADD $cur 5
+  SET_LABEL display $cur
+END
+ON KEY 5
+  MUL $cur 10
+  ADD $cur 5
+  SET_LABEL display $cur
+END
+ON CLICK b6
+  MUL $cur 10
+  ADD $cur 6
+  SET_LABEL display $cur
+END
+ON KEY 6
+  MUL $cur 10
+  ADD $cur 6
+  SET_LABEL display $cur
+END
+ON CLICK b7
+  MUL $cur 10
+  ADD $cur 7
+  SET_LABEL display $cur
+END
+ON KEY 7
+  MUL $cur 10
+  ADD $cur 7
+  SET_LABEL display $cur
+END
+ON CLICK b8
+  MUL $cur 10
+  ADD $cur 8
+  SET_LABEL display $cur
+END
+ON KEY 8
+  MUL $cur 10
+  ADD $cur 8
+  SET_LABEL display $cur
+END
+ON CLICK b9
+  MUL $cur 10
+  ADD $cur 9
+  SET_LABEL display $cur
+END
+ON KEY 9
+  MUL $cur 10
+  ADD $cur 9
+  SET_LABEL display $cur
+END
+
+# ===== Operators (button + key) =====
+ON CLICK ba
+  IF $op == 1 GOTO doadd
+  IF $op == 2 GOTO dosub
+  IF $op == 3 GOTO domul
+  IF $op == 4 GOTO dodiv
+  SET $acc $cur
+  GOTO setop
+  :doadd
+  ADD $acc $cur
+  GOTO setop
+  :dosub
+  SUB $acc $cur
+  GOTO setop
+  :domul
+  MUL $acc $cur
+  GOTO setop
+  :dodiv
+  DIV $acc $cur
+  :setop
+  SET $cur 0
+  SET $op 1
+  SET_LABEL display $acc
+END
+ON KEY +
+  IF $op == 1 GOTO doadd
+  IF $op == 2 GOTO dosub
+  IF $op == 3 GOTO domul
+  IF $op == 4 GOTO dodiv
+  SET $acc $cur
+  GOTO setop
+  :doadd
+  ADD $acc $cur
+  GOTO setop
+  :dosub
+  SUB $acc $cur
+  GOTO setop
+  :domul
+  MUL $acc $cur
+  GOTO setop
+  :dodiv
+  DIV $acc $cur
+  :setop
+  SET $cur 0
+  SET $op 1
+  SET_LABEL display $acc
+END
+
+ON CLICK bs
+  IF $op == 1 GOTO doadd
+  IF $op == 2 GOTO dosub
+  IF $op == 3 GOTO domul
+  IF $op == 4 GOTO dodiv
+  SET $acc $cur
+  GOTO setop
+  :doadd
+  ADD $acc $cur
+  GOTO setop
+  :dosub
+  SUB $acc $cur
+  GOTO setop
+  :domul
+  MUL $acc $cur
+  GOTO setop
+  :dodiv
+  DIV $acc $cur
+  :setop
+  SET $cur 0
+  SET $op 2
+  SET_LABEL display $acc
+END
+ON KEY -
+  IF $op == 1 GOTO doadd
+  IF $op == 2 GOTO dosub
+  IF $op == 3 GOTO domul
+  IF $op == 4 GOTO dodiv
+  SET $acc $cur
+  GOTO setop
+  :doadd
+  ADD $acc $cur
+  GOTO setop
+  :dosub
+  SUB $acc $cur
+  GOTO setop
+  :domul
+  MUL $acc $cur
+  GOTO setop
+  :dodiv
+  DIV $acc $cur
+  :setop
+  SET $cur 0
+  SET $op 2
+  SET_LABEL display $acc
+END
+
+ON CLICK bm
+  IF $op == 1 GOTO doadd
+  IF $op == 2 GOTO dosub
+  IF $op == 3 GOTO domul
+  IF $op == 4 GOTO dodiv
+  SET $acc $cur
+  GOTO setop
+  :doadd
+  ADD $acc $cur
+  GOTO setop
+  :dosub
+  SUB $acc $cur
+  GOTO setop
+  :domul
+  MUL $acc $cur
+  GOTO setop
+  :dodiv
+  DIV $acc $cur
+  :setop
+  SET $cur 0
+  SET $op 3
+  SET_LABEL display $acc
+END
+ON KEY *
+  IF $op == 1 GOTO doadd
+  IF $op == 2 GOTO dosub
+  IF $op == 3 GOTO domul
+  IF $op == 4 GOTO dodiv
+  SET $acc $cur
+  GOTO setop
+  :doadd
+  ADD $acc $cur
+  GOTO setop
+  :dosub
+  SUB $acc $cur
+  GOTO setop
+  :domul
+  MUL $acc $cur
+  GOTO setop
+  :dodiv
+  DIV $acc $cur
+  :setop
+  SET $cur 0
+  SET $op 3
+  SET_LABEL display $acc
+END
+
+ON CLICK bd
+  IF $op == 1 GOTO doadd
+  IF $op == 2 GOTO dosub
+  IF $op == 3 GOTO domul
+  IF $op == 4 GOTO dodiv
+  SET $acc $cur
+  GOTO setop
+  :doadd
+  ADD $acc $cur
+  GOTO setop
+  :dosub
+  SUB $acc $cur
+  GOTO setop
+  :domul
+  MUL $acc $cur
+  GOTO setop
+  :dodiv
+  DIV $acc $cur
+  :setop
+  SET $cur 0
+  SET $op 4
+  SET_LABEL display $acc
+END
+ON KEY /
+  IF $op == 1 GOTO doadd
+  IF $op == 2 GOTO dosub
+  IF $op == 3 GOTO domul
+  IF $op == 4 GOTO dodiv
+  SET $acc $cur
+  GOTO setop
+  :doadd
+  ADD $acc $cur
+  GOTO setop
+  :dosub
+  SUB $acc $cur
+  GOTO setop
+  :domul
+  MUL $acc $cur
+  GOTO setop
+  :dodiv
+  DIV $acc $cur
+  :setop
+  SET $cur 0
+  SET $op 4
+  SET_LABEL display $acc
+END
+
+# ===== Equal / Enter =====
+ON CLICK beq
+  IF $op == 1 GOTO eqa
+  IF $op == 2 GOTO eqs
+  IF $op == 3 GOTO eqm
+  IF $op == 4 GOTO eqd
+  GOTO eqdone
+  :eqa
+  ADD $acc $cur
+  GOTO eqdone
+  :eqs
+  SUB $acc $cur
+  GOTO eqdone
+  :eqm
+  MUL $acc $cur
+  GOTO eqdone
+  :eqd
+  DIV $acc $cur
+  :eqdone
+  SET $op 0
+  SET $cur 0
+  SET_LABEL display $acc
+END
+ON KEY =
+  IF $op == 1 GOTO eqa
+  IF $op == 2 GOTO eqs
+  IF $op == 3 GOTO eqm
+  IF $op == 4 GOTO eqd
+  GOTO eqdone
+  :eqa
+  ADD $acc $cur
+  GOTO eqdone
+  :eqs
+  SUB $acc $cur
+  GOTO eqdone
+  :eqm
+  MUL $acc $cur
+  GOTO eqdone
+  :eqd
+  DIV $acc $cur
+  :eqdone
+  SET $op 0
+  SET $cur 0
+  SET_LABEL display $acc
+END
+ON KEY ENTER
+  IF $op == 1 GOTO eqa
+  IF $op == 2 GOTO eqs
+  IF $op == 3 GOTO eqm
+  IF $op == 4 GOTO eqd
+  GOTO eqdone
+  :eqa
+  ADD $acc $cur
+  GOTO eqdone
+  :eqs
+  SUB $acc $cur
+  GOTO eqdone
+  :eqm
+  MUL $acc $cur
+  GOTO eqdone
+  :eqd
+  DIV $acc $cur
+  :eqdone
+  SET $op 0
+  SET $cur 0
+  SET_LABEL display $acc
+END
+
+# ===== Clear =====
+ON CLICK bC
+  SET $acc 0
+  SET $cur 0
+  SET $op 0
+  SET_LABEL display "0"
+  PRINT "Sifirlandi"
+END
+ON KEY C
+  SET $acc 0
+  SET $cur 0
+  SET $op 0
+  SET_LABEL display "0"
+  PRINT "Sifirlandi"
+END

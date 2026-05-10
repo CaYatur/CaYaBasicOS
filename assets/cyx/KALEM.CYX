@@ -1,0 +1,80 @@
+# KALEM.CYX  --  Basit cizim uygulamasi
+# Pürüzsüz cizim icin LINE @prevx @prevy @x @y kullanilir.
+# Mouse butonu birakildiginda C tarafi @prevx/@prevy'yi sifirlar.
+
+ON START
+  WINDOW 480 300 "Kalem"
+  FILL 0
+  SET $color 15
+  SET $brush 2
+
+  BUTTON cB 6   4 28 22 "Sl"
+  BUTTON cR 38  4 28 22 "Kr"
+  BUTTON cG 70  4 28 22 "Ye"
+  BUTTON cb 102 4 28 22 "Mv"
+  BUTTON cY 134 4 28 22 "Sa"
+  BUTTON cM 166 4 28 22 "Mr"
+  BUTTON cW 198 4 28 22 "Be"
+
+  BUTTON bsm 240 4 28 22 "1"
+  BUTTON bmd 272 4 28 22 "2"
+  BUTTON blg 304 4 28 22 "4"
+
+  BUTTON btnclear 380 4 92 22 "TEMIZLE"
+  LABEL hint 6 32 LGRAY "Surukleyerek ciz. Renk + kalinlik secebilirsin."
+END
+
+ON CLICK cB
+  SET $color 0
+  PRINT "Renk: Siyah"
+END
+ON CLICK cR
+  SET $color 6
+  PRINT "Renk: Kirmizi"
+END
+ON CLICK cG
+  SET $color 3
+  PRINT "Renk: Yesil"
+END
+ON CLICK cb
+  SET $color 2
+  PRINT "Renk: Mavi"
+END
+ON CLICK cY
+  SET $color 14
+  PRINT "Renk: Sari"
+END
+ON CLICK cM
+  SET $color 7
+  PRINT "Renk: Mor"
+END
+ON CLICK cW
+  SET $color 15
+  PRINT "Renk: Beyaz"
+END
+
+ON CLICK bsm
+  SET $brush 1
+  PRINT "Kalinlik: 1"
+END
+ON CLICK bmd
+  SET $brush 2
+  PRINT "Kalinlik: 2"
+END
+ON CLICK blg
+  SET $brush 4
+  PRINT "Kalinlik: 4"
+END
+
+ON CLICK btnclear
+  FILL 0
+  PRINT "Temizlendi"
+END
+
+ON DRAG
+  IF @y < 50 GOTO skip
+  LINE @prevx @prevy @x @y $color
+  IF $brush <= 1 GOTO skip
+  FILLRECT @x @y $brush $brush $color
+  :skip
+END

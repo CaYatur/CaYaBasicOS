@@ -1,0 +1,28 @@
+# Build outputs
+/build/
+/dist/
+
+# Generated disk and binary images
+*.bin
+*.elf
+*.img
+*.iso
+*.o
+*.obj
+*.tmp
+*.map
+
+# Logs and diagnostics
+*.log
+*.dmp
+
+# Editor and OS files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.swp
+*~
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,53 @@
+# OYUN.CYX  --  Refleks oyunu: hareketli hedefe tikla
+# Her tiklamada hedef rastgele yeni konuma gider (RNG icin @tick kullanilir).
+
+ON START
+  WINDOW 400 300 "Refleks Oyunu"
+  FILL 4
+  LABEL scoretxt 8 10 YELLOW "PUAN: 0"
+  LABEL hint     8 30 LGRAY  "Hedefe tikla. R sifirla, ESC kapat."
+  SET $score 0
+  SET $seed 7
+  ADD $seed @tick
+  MUL $seed 31
+  ADD $seed 17
+  MOD $seed 320
+  ADD $seed 30
+  SET $tx $seed
+  ADD $seed @tick
+  MUL $seed 13
+  ADD $seed 11
+  MOD $seed 200
+  ADD $seed 50
+  SET $ty $seed
+  BUTTON tgt $tx $ty 60 50 "VUR!"
+END
+
+ON CLICK tgt
+  ADD $score 1
+  SETSTR $msg "PUAN: "
+  APPEND $msg $score
+  SET_LABEL scoretxt $msg
+  ADD $seed @tick
+  ADD $seed 7
+  MUL $seed 17
+  ADD $seed 23
+  MOD $seed 320
+  ADD $seed 30
+  SET $tx $seed
+  ADD $seed @tick
+  ADD $seed 3
+  MUL $seed 11
+  ADD $seed 5
+  MOD $seed 200
+  ADD $seed 50
+  SET $ty $seed
+  BUTTON tgt $tx $ty 60 50 "VUR!"
+  PRINT "Iyi nisan!"
+END
+
+ON KEY R
+  SET $score 0
+  SET_LABEL scoretxt "PUAN: 0"
+  PRINT "Sifirlandi"
+END

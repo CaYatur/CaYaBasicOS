@@ -1,0 +1,494 @@
+ON START
+WINDOW 640 360 "PinPong"
+FILL BLACK
+LABEL lp 18 8 YELLOW "SEN: 0"
+LABEL la 568 8 YELLOW "PC: 0"
+SET $ps 0
+SET $as 0
+SET $game 1
+SET $wait 0
+SET $winner 0
+SET $msg 0
+SET $py 145
+SET $ay 145
+SET $bx 314
+SET $by 174
+SET $vx 7
+SET $vy 4
+SET $tmp 0
+SET $mid 0
+SET $s 0
+SETSTR $txt ""
+SETSTR $num ""
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+END
+
+ON TICK
+IF $winner > 0 GOTO draw
+IF $wait > 0 GOTO wait
+IF $game == 0 GOTO draw
+SET $s 1
+:loop
+SET $mid $ay
+ADD $mid 35
+IF $mid < $by GOTO aid
+SUB $ay 6
+GOTO aic
+:aid
+ADD $ay 6
+:aic
+IF $ay < 35 GOTO ait
+IF $ay > 285 GOTO aib
+GOTO ball
+:ait
+SET $ay 35
+GOTO ball
+:aib
+SET $ay 285
+:ball
+ADD $bx $vx
+ADD $by $vy
+IF $by < 35 GOTO wt
+IF $by > 343 GOTO wb
+GOTO sc
+:wt
+SET $by 35
+SET $vy 4
+GOTO sc
+:wb
+SET $by 343
+SET $vy 0
+SUB $vy 4
+:sc
+IF $bx < -18 GOTO pcscore
+IF $bx > 646 GOTO plscore
+IF $bx > 54 GOTO rp
+SET $tmp $py
+SUB $tmp 18
+IF $by < $tmp GOTO rp
+SET $tmp $py
+ADD $tmp 86
+IF $by > $tmp GOTO rp
+SET $bx 54
+SET $vx 7
+SET $mid $py
+ADD $mid 35
+IF $by < $mid GOTO lup
+SET $vy 4
+GOTO rp
+:lup
+SET $vy 0
+SUB $vy 4
+:rp
+IF $bx < 588 GOTO drawmini
+SET $tmp $ay
+SUB $tmp 18
+IF $by < $tmp GOTO drawmini
+SET $tmp $ay
+ADD $tmp 86
+IF $by > $tmp GOTO drawmini
+SET $bx 588
+SET $vx 0
+SUB $vx 7
+SET $mid $ay
+ADD $mid 35
+IF $by < $mid GOTO rup
+SET $vy 4
+GOTO drawmini
+:rup
+SET $vy 0
+SUB $vy 4
+:drawmini
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+SUB $s 1
+IF $s > 0 GOTO loop
+GOTO done
+:plscore
+ADD $ps 1
+TOSTR $num $ps
+SETSTR $txt "SEN: "
+APPEND $txt $num
+SET_LABEL lp $txt
+SET $bx 314
+SET $by 174
+SET $vx 0
+SUB $vx 7
+SET $vy 4
+IF $ps >= 5 GOTO plwin
+SET $wait 4
+SET $msg 1
+GOTO draw
+:pcscore
+ADD $as 1
+TOSTR $num $as
+SETSTR $txt "PC: "
+APPEND $txt $num
+SET_LABEL la $txt
+SET $bx 314
+SET $by 174
+SET $vx 7
+SET $vy 4
+IF $as >= 5 GOTO pcwin
+SET $wait 4
+SET $msg 2
+GOTO draw
+:plwin
+SET $winner 1
+SET $msg 3
+GOTO draw
+:pcwin
+SET $winner 2
+SET $msg 4
+GOTO draw
+:wait
+SUB $wait 1
+IF $wait > 0 GOTO draw
+SET $msg 0
+GOTO draw
+:draw
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+IF $msg == 1 GOTO mp
+IF $msg == 2 GOTO mc
+IF $msg == 3 GOTO mw
+IF $msg == 4 GOTO mpc
+IF $game == 0 GOTO mpa
+GOTO done
+:mp
+TEXT 262 170 YELLOW "SEN SKOR"
+GOTO done
+:mc
+TEXT 270 170 RED "PC SKOR"
+GOTO done
+:mw
+FILLRECT 246 156 152 46 NAVY
+TEXT 264 164 YELLOW "SEN KAZANDI"
+TEXT 296 184 LGRAY "R BAS"
+GOTO done
+:mpc
+FILLRECT 246 156 152 46 NAVY
+TEXT 272 164 RED "PC KAZANDI"
+TEXT 296 184 LGRAY "R BAS"
+GOTO done
+:mpa
+TEXT 266 170 LCYAN "DURAKLATILDI"
+:done
+END
+
+ON MOVE
+SET $py @y
+SUB $py 35
+IF $py < 35 GOTO mt
+IF $py > 285 GOTO mb
+GOTO mm
+:mt
+SET $py 35
+GOTO mm
+:mb
+SET $py 285
+:mm
+IF $winner > 0 GOTO md
+IF $wait > 0 GOTO md
+IF $game == 0 GOTO md
+SET $mid $ay
+ADD $mid 35
+IF $mid < $by GOTO maid
+SUB $ay 6
+GOTO maic
+:maid
+ADD $ay 6
+:maic
+IF $ay < 35 GOTO mait
+IF $ay > 285 GOTO maib
+GOTO mball
+:mait
+SET $ay 35
+GOTO mball
+:maib
+SET $ay 285
+:mball
+ADD $bx $vx
+ADD $by $vy
+IF $by < 35 GOTO mwt
+IF $by > 343 GOTO mwb
+GOTO mcol
+:mwt
+SET $by 35
+SET $vy 4
+GOTO mcol
+:mwb
+SET $by 343
+SET $vy 0
+SUB $vy 4
+:mcol
+IF $bx > 54 GOTO mrp
+SET $tmp $py
+SUB $tmp 18
+IF $by < $tmp GOTO mrp
+SET $tmp $py
+ADD $tmp 86
+IF $by > $tmp GOTO mrp
+SET $bx 54
+SET $vx 7
+SET $mid $py
+ADD $mid 35
+IF $by < $mid GOTO mlup
+SET $vy 4
+GOTO mrp
+:mlup
+SET $vy 0
+SUB $vy 4
+:mrp
+IF $bx < 588 GOTO md
+SET $tmp $ay
+SUB $tmp 18
+IF $by < $tmp GOTO md
+SET $tmp $ay
+ADD $tmp 86
+IF $by > $tmp GOTO md
+SET $bx 588
+SET $vx 0
+SUB $vx 7
+SET $mid $ay
+ADD $mid 35
+IF $by < $mid GOTO mrup
+SET $vy 4
+GOTO md
+:mrup
+SET $vy 0
+SUB $vy 4
+:md
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+IF $msg == 1 GOTO mp
+IF $msg == 2 GOTO mc
+IF $msg == 3 GOTO mw
+IF $msg == 4 GOTO mpc
+IF $game == 0 GOTO mpa
+GOTO done
+:mp
+TEXT 262 170 YELLOW "SEN SKOR"
+GOTO done
+:mc
+TEXT 270 170 RED "PC SKOR"
+GOTO done
+:mw
+FILLRECT 246 156 152 46 NAVY
+TEXT 264 164 YELLOW "SEN KAZANDI"
+GOTO done
+:mpc
+FILLRECT 246 156 152 46 NAVY
+TEXT 272 164 RED "PC KAZANDI"
+GOTO done
+:mpa
+TEXT 266 170 LCYAN "DURAKLATILDI"
+:done
+END
+
+ON KEY W
+SET $s 3
+:wloop
+SUB $py 7
+IF $py < 35 GOTO wkt
+IF $py > 285 GOTO wkb
+GOTO wkd
+:wkt
+SET $py 35
+GOTO wkd
+:wkb
+SET $py 285
+:wkd
+IF $winner > 0 GOTO wdraw
+IF $wait > 0 GOTO wdraw
+IF $game == 0 GOTO wdraw
+SET $mid $ay
+ADD $mid 35
+IF $mid < $by GOTO waid
+SUB $ay 5
+GOTO waic
+:waid
+ADD $ay 5
+:waic
+IF $ay < 35 GOTO wait
+IF $ay > 285 GOTO waib
+GOTO wbal
+:wait
+SET $ay 35
+GOTO wbal
+:waib
+SET $ay 285
+:wbal
+ADD $bx $vx
+ADD $by $vy
+IF $by < 35 GOTO wwt
+IF $by > 343 GOTO wwb
+GOTO wdr
+:wwt
+SET $by 35
+SET $vy 4
+GOTO wdr
+:wwb
+SET $by 343
+SET $vy 0
+SUB $vy 4
+:wdr
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+GOTO wnext
+:wdraw
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+:wnext
+SUB $s 1
+IF $s > 0 GOTO wloop
+END
+
+ON KEY S
+SET $s 3
+:sloop
+ADD $py 7
+IF $py < 35 GOTO skt
+IF $py > 285 GOTO skb
+GOTO skd
+:skt
+SET $py 35
+GOTO skd
+:skb
+SET $py 285
+:skd
+IF $winner > 0 GOTO sdraw
+IF $wait > 0 GOTO sdraw
+IF $game == 0 GOTO sdraw
+SET $mid $ay
+ADD $mid 35
+IF $mid < $by GOTO said
+SUB $ay 5
+GOTO saic
+:said
+ADD $ay 5
+:saic
+IF $ay < 35 GOTO sait
+IF $ay > 285 GOTO saib
+GOTO sbal
+:sait
+SET $ay 35
+GOTO sbal
+:saib
+SET $ay 285
+:sbal
+ADD $bx $vx
+ADD $by $vy
+IF $by < 35 GOTO swt
+IF $by > 343 GOTO swb
+GOTO sdr
+:swt
+SET $by 35
+SET $vy 4
+GOTO sdr
+:swb
+SET $by 343
+SET $vy 0
+SUB $vy 4
+:sdr
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+GOTO snext
+:sdraw
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+:snext
+SUB $s 1
+IF $s > 0 GOTO sloop
+END
+
+ON KEY UP
+SET $s 3
+:uloop
+SUB $py 7
+IF $py < 35 GOTO ut
+GOTO ud
+:ut
+SET $py 35
+:ud
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+SUB $s 1
+IF $s > 0 GOTO uloop
+END
+ON KEY DOWN
+SET $s 3
+:dloop
+ADD $py 7
+IF $py > 285 GOTO db
+GOTO dd
+:db
+SET $py 285
+:dd
+FILL BLACK
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+SUB $s 1
+IF $s > 0 GOTO dloop
+END
+ON KEY SPACE
+IF $winner > 0 GOTO done
+IF $wait > 0 GOTO done
+IF $game == 0 GOTO res
+SET $game 0
+GOTO done
+:res
+SET $game 1
+:done
+END
+
+ON KEY R
+FILL BLACK
+SET $ps 0
+SET $as 0
+SET $game 1
+SET $wait 0
+SET $winner 0
+SET $msg 0
+SET $py 145
+SET $ay 145
+SET $bx 314
+SET $by 174
+SET $vx 7
+SET $vy 4
+SET_LABEL lp "SEN: 0"
+SET_LABEL la "PC: 0"
+FILLRECT 24 $py 16 70 WHITE
+FILLRECT 600 $ay 16 70 RED
+FILLRECT $bx $by 12 12 YELLOW
+FILLRECT 319 30 2 330 DGRAY
+END

@@ -1,0 +1,133 @@
+CYX UYGULAMA DILI -- GELISTIRICI REFERANSI
+==========================================
+CaYaBasicOS icin .cyx uzantili kucuk uygulamalar yazma rehberi.
+Tum komut isimleri INGILIZCE'dir, ama text/string ve PRINT mesajlari serbesttir.
+
+DOSYA AKISI
+-----------
+.CYX uzantili bir dosyaya cift tiklayinca CYX UYGULAMA secim diyalogu acilir:
+  [C] CALISTIR  -- yorumlar ve uygulama olarak baslatir
+  [D] DUZENLE   -- not defteri editorunde ac (kaydetmek icin ESC)
+
+Uygulama caliskenken:
+  - Pencere baslik cubugundaki [ESC] KAPAT veya klavye ESC ile kapatilir.
+  - Calisma sirasinda hata cikarsa pencere altinda KIRMIZI hata seridi
+    "HATA SAT N : MESAJ" seklinde gosterilir. E tusu ile editore donulur.
+
+DIL KURALLARI
+-------------
+* Her satır tek komut.  Bos satır ve "#" ile başlayan satırlar yorumdur.
+* String degerler "cift tirnak" icine yazilir.
+* Degisken adlari $ ile baslar  (ornek:  $skor, $isim).
+* Etiketler ":isim" seklinde, GOTO ile ulasilir.  Etiket adlari handler
+  blogu icinde benzersiz olmali.
+* Tum kod ON ... END blogu icinde olmalidir.
+
+DEGER TURLERI
+-------------
+- Tam sayı ($var):  SET $a 5    ADD $a 1    IF $a > 10 GOTO ust
+- Metin     ($var):  SETSTR $ad "Caglar"   APPEND $ad " bey"
+- Renk:  0..15 paletten ya da BLACK NAVY BLUE GREEN DGREEN CYAN RED
+         MAGENTA BROWN LGRAY DGRAY LBLUE LGREEN LCYAN YELLOW WHITE
+         veya 0xRRGGBB (otomatik en yakin renge cevrilir)
+
+OZEL DEGISKENLER (read-only)
+----------------------------
+@x  @y           Mouse konumu (canvas-rolatif)
+@key             En son basilan tusun adi (ENTER, ESC, SPACE, A..Z, UP, DOWN, ...)
+@click_btn       En son tiklanan buton id'si
+@tick            TICK olayinin sayaci
+@width @height   Canvas genisligi/ yuksekligi
+
+OLAY BLOKLARI
+-------------
+ON START          Uygulama acildiginda 1 kere calisir.  WINDOW burada cagrilir.
+ON CLICK btnId    Bir butona tiklandiginda calisir.
+ON KEY KEYNAME    Belirli tus icin (ON KEY A, ON KEY UP).  KEYNAME yazmazsan
+                  her tus tetikler ve @key'den okuyabilirsin.
+ON DRAG           Mouse sol tus basili iken canvas uzerinde her cerceve.
+ON MOVE           Mouse canvas uzerinde gezerken her cerceve.
+ON TICK           Saniyede ~60 kere otomatik tetiklenir (animasyon icin).
+END               Bloku kapatir.  Her ON bir END ister.
+
+PENCERE / DURUM
+---------------
+WINDOW W H "Baslik"      Canvas boyutu (120..760 x 80..520) ve baslik.  ON START icinde.
+TITLE "Yeni baslik"      Sadece basligi degistirir.
+EXIT                     Uygulamayi kapatir.
+PRINT "metin"            Pencere altindaki durum cubuguna yazar.
+PRINT $degisken          Degisken degerini durum cubuguna yazar.
+
+CIZIM (canvas, ON DRAG/CLICK/TICK icinden)
+------------------------------------------
+FILL renk                       Tum canvas'i renkle doldurur, tum eski cizimi siler.
+CLEAR                           FILL 0 ile aynidir.
+PIXEL X Y renk                  Tek piksel.
+LINE X1 Y1 X2 Y2 renk           Cizgi.
+RECT X Y W H renk               Disli dikdortgen cizer.
+FILLRECT X Y W H renk           Dolu dikdortgen.
+TEXT X Y renk "kisa"            Canvas'a sabit yazi (en fazla 15 karakter).
+
+UI OGELERI (canvas uzerinde)
+----------------------------
+LABEL  ID X Y renk "metin"      Guncellenebilir yazi alan.
+INPUT  ID X Y W H               Klavye ile yazi girisi alanin.
+BUTTON ID X Y W H "metin"       Tiklanabilir buton.
+SET_LABEL ID "metin"            LABEL'in metnini gunceller (string veya $var).
+SET_INPUT ID "metin"            INPUT icerigini gunceller.
+GET_INPUT ID $strvar            INPUT icerigini bir degiskene okur.
+
+DEGISKEN VE MATEMATIK
+---------------------
+SET    $var int                 Tam sayi atar (literal veya baska bir int $var).
+SETSTR $var "metin"             Metin atar.
+APPEND $var "ek"                Metin sonuna ekler.
+ADD/SUB/MUL/DIV/MOD $var deger  Aritmetik islem.
+TOSTR  $strvar $intvar          int -> metin.
+TOINT  $intvar $strvar          metin -> int.
+
+KONTROL AKISI
+-------------
+:etiket                         Atlama hedefi.
+GOTO etiket                     O hedefe atlar.
+IF $a OP $b GOTO etiket         OP : ==  !=  <  >  <=  >=
+                                Sag taraf degisken veya literal olabilir.
+
+DOSYA SISTEMI / SISTEM KOMUTLARI
+--------------------------------
+LIST_DISKS $count               Bagli mantiksal disk sayisini $count'a yazar.
+                                Indeks 0..count-1 araligindadir.
+COPY   srcDisk "src" dstDisk "dst"
+MOVE   srcDisk "src" dstDisk "dst"
+DELETE disk    "path"
+                                "src"/"dst" yollari "/" veya "\" kabul eder
+                                ve otomatik "\" olarak normallesir.
+                                Hata olursa hata seridinde gosterilir.
+
+ORNEKLER
+--------
+HESAP.CYX  : Hesap makinesi  (SET, ADD, IF GOTO, SET_LABEL)
+KALEM.CYX  : Cizim uygulamasi (ON DRAG, FILLRECT, renk butonlari)
+DOSYA.CYX  : Dosya islemleri (INPUT + COPY/MOVE/DELETE + LIST_DISKS)
+OYUN.CYX   : Refleks oyunu (BUTTON konum guncelleme, IF GOTO, ON KEY)
+PINPONG.CYX: Pong oyunu (ON TICK fizik dongusu, ON MOVE paddle, ON KEY W/S/SPACE/R)
+
+LIMITLER
+--------
+Kaynak boyutu       : 16 KB
+Satir sayisi        :   512
+Yorumlayici hand.   :    48
+Etiket sayisi       :    96
+Degisken sayisi     :    48
+Cizim islemi        :  1024  (FILL veya CLEAR otomatik temizler)
+Buton/Etiket/Input  :    24 / 24 / 6
+Toplam exec budgeti :  50000 satir / dispatch  (sonsuz dongu korumasi)
+
+IPUCLARI
+--------
+* Hata cikarsa hata seridindeki satır N'i yorumlayici sayar (1-tabanli).
+* PIXEL ile her olayda yuzlerce piksel cizmek 1024 op limitini doldurur;
+  paint icin FILLRECT W H 2 2 daha verimlidir.
+* GOTO sadece ayni ON ... END blogu icindeki etiketleri arar.
+* INPUT alanindayken klavyeden gelen tuslar input'a yazilir; ON KEY ENTER
+  yine de tetiklenir.
